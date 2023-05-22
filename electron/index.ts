@@ -10,7 +10,7 @@ const url = process.env['VITE_DEV_SERVER_URL']
 app.on('ready', () => {
   const win = new BrowserWindow({
     // disable initial window from showing
-    show: false,
+    show: isDev ? false : true,
     webPreferences: {
       preload,
     },
