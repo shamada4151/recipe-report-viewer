@@ -1,13 +1,44 @@
-import { openReport } from '../../lib/open-report'
+import { AddressInfo } from 'net'
+import { z } from 'zod'
+
 import { router, procedure } from '../trpc'
+import { buildReportTree } from '../../lib/build-tree'
+import { launchServer } from '../../lib/open-report'
+import { BrowserWindow } from 'electron'
+import { getDirBySelectingFile } from '../../lib/openDialog'
 
 export const reportRouter = router({
-  test: procedure.query(() => {
-    return { test: 'test' }
-  }),
   open: procedure.mutation(async () => {
+    const window = BrowserWindow.getFocusedWindow()
+    if (window === null) {
+      return {
+        port: '',
+        root: '',
+      }
+    }
+
+    const root = await getDirBySelectingFile(window)
+    const server = await launchServer(root)
+
+    window.on('close', () => {
+      server.close()
+    })
+
     return {
-      port: await openReport(),
+      port: (server.address() as AddressInfo).port,
+      root,
     }
   }),
+  tree: procedure
+    .input(
+      z.object({
+        root: z.string(),
+      })
+    )
+    .mutation(async (opts) => {
+      const { root } = opts.input
+      const tree = await buildReportTree(root)
+
+      return { tree }
+    }),
 })
