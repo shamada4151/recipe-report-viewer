@@ -1,6 +1,7 @@
 import path from 'path'
 import { app, BrowserWindow } from 'electron'
 import { createIPCHandler } from 'electron-trpc/main'
+import isDev from 'electron-is-dev'
 import { appRouter } from './api/router'
 
 const preload = path.join(__dirname, './preload.js')
@@ -8,6 +9,8 @@ const url = process.env['VITE_DEV_SERVER_URL']
 
 app.on('ready', () => {
   const win = new BrowserWindow({
+    // disable initial window from showing
+    show: false,
     webPreferences: {
       preload,
     },
@@ -15,11 +18,11 @@ app.on('ready', () => {
 
   createIPCHandler({ router: appRouter, windows: [win] })
 
-  if (url) {
+  if (isDev && url) {
     win.loadURL(url)
   } else {
     win.loadFile(path.join(__dirname, '../dist', 'index.html'))
   }
 
-  win.show()
+  win.showInactive()
 })

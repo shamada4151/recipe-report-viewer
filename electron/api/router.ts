@@ -2,6 +2,7 @@ import z from 'zod'
 import { observable } from '@trpc/server/observable'
 import { EventEmitter } from 'events'
 import { procedure, router } from './trpc'
+import { reportRouter } from './roots/report'
 
 const ee = new EventEmitter()
 
@@ -27,6 +28,14 @@ export const appRouter = router({
       }
     })
   }),
+  test: procedure.input(z.object({ name: z.string() })).query((req) => {
+    const { input } = req
+
+    return {
+      text: `Hello ${input.name}` as const,
+    }
+  }),
+  report: reportRouter,
 })
 
 export type AppRouter = typeof appRouter

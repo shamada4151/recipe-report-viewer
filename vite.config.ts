@@ -12,9 +12,15 @@ export default defineConfig({
     electron([
       {
         entry: 'electron/index.ts',
+        vite: {
+          mode: 'development',
+        },
       },
       {
         entry: 'preload/preload.ts',
+        vite: {
+          mode: 'development',
+        },
         onstart(options) {
           options.reload()
         },
