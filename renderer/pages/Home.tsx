@@ -2,12 +2,13 @@ import { useEffect } from 'react'
 
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import Grid from '@mui/material/Unstable_Grid2'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
 import TreeView from '../components/TreeView'
 import { trpc } from '../utils/trpc'
+import ReportView from '../components/ReportView'
 
 const Home = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
@@ -39,14 +40,14 @@ const Home = () => {
     return <CircularProgress />
   }
   return (
-    <Grid container>
-      <Grid xs={3} height="100%">
+    <Stack direction="row" height="100%">
+      <Box height="100%" maxWidth="12rem" overflow="scroll">
         {tree?.tree && <TreeView item={tree.tree} />}
-      </Grid>
-      <Grid xs={9}>
-        <iframe src={`http://127.0.0.1:${server.port}/Report.html`} />
-      </Grid>
-    </Grid>
+      </Box>
+      <Box height="100%" sx={{ flexGrow: 1 }}>
+        <ReportView root={`http://127.0.0.1:${server.port}`} />
+      </Box>
+    </Stack>
   )
 }
 

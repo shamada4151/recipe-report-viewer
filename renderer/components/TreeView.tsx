@@ -1,22 +1,34 @@
 import { FC } from 'react'
 import { TreeItem } from '../../electron/lib/build-tree'
-import { Box, List, ListItem, Typography } from '@mui/material'
+import { List, ListItemButton, Typography } from '@mui/material'
+import { usePagePath } from '../providers/PagePathProvider'
 
 type Props = {
   item: TreeItem
+  depth?: number
 }
-const TreeView: FC<Props> = ({ item }) => {
+const TreeView: FC<Props> = ({ item, depth = 0 }) => {
+  const [path, setPath] = usePagePath()
+
+  const handleClick = () => {
+    setPath(item.href)
+  }
+
   return (
     <List disablePadding>
-      <ListItem disablePadding dense>
+      <ListItemButton
+        dense
+        disableGutters
+        selected={item.href === path}
+        onClick={handleClick}
+        sx={{ pl: 1 + depth * 2 }}
+      >
         <Typography variant="subtitle2" noWrap overflow="visible">
-          {item.title} - {item.href}
+          {item.title}
         </Typography>
-      </ListItem>
+      </ListItemButton>
       {item.children?.map((child) => (
-        <Box pl={2}>
-          <TreeView key={child.href} item={child} />
-        </Box>
+        <TreeView key={child.href} item={child} depth={depth + 1} />
       ))}
     </List>
   )
