@@ -8,9 +8,6 @@ export const launchServer = async (root: string) => {
   app.on('quit', () => {
     server.close()
   })
-  app.on('window-all-closed', () => {
-    server.close()
-  })
 
   return server
 }

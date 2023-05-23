@@ -41,7 +41,7 @@ const Home = () => {
   }
   return (
     <Stack direction="row" height="100%">
-      <Box height="100%" maxWidth="12rem" overflow="scroll">
+      <Box height="100%" width="12rem" maxWidth="12rem" overflow="scroll">
         {tree?.tree && <TreeView item={tree.tree} />}
       </Box>
       <Box height="100%" sx={{ flexGrow: 1 }}>

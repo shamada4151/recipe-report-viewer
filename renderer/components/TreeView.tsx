@@ -23,8 +23,13 @@ const TreeView: FC<Props> = ({ item, depth = 0 }) => {
         onClick={handleClick}
         sx={{ pl: 1 + depth * 2 }}
       >
-        <Typography variant="subtitle2" noWrap overflow="visible">
-          {item.title}
+        <Typography
+          variant="subtitle2"
+          noWrap
+          overflow="visible"
+          color={item.report.error ? 'error' : 'inherit'}
+        >
+          {item.report.title}
         </Typography>
       </ListItemButton>
       {item.children?.map((child) => (
