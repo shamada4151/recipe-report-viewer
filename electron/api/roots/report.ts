@@ -12,7 +12,7 @@ export const reportRouter = router({
     const window = BrowserWindow.getFocusedWindow()
     if (window === null) {
       return {
-        port: '',
+        port: 0,
         root: '',
       }
     }
@@ -35,8 +35,11 @@ export const reportRouter = router({
         root: z.string(),
       })
     )
-    .mutation(async (opts) => {
+    .query(async (opts) => {
       const { root } = opts.input
+      if (!root) {
+        return { tree: null }
+      }
       const tree = await buildReportTree(root)
 
       return { tree }

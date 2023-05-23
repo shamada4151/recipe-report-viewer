@@ -28,13 +28,6 @@ export const appRouter = router({
       }
     })
   }),
-  test: procedure.input(z.object({ name: z.string() })).query((req) => {
-    const { input } = req
-
-    return {
-      text: `Hello ${input.name}` as const,
-    }
-  }),
   report: reportRouter,
 })
 

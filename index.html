@@ -5,13 +5,16 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; frame-src 'self' http://127.0.0.1:*"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; frame-src 'self' http://127.0.0.1:*"
+      content="script-src 'self'; frame-src 'self' http://127.0.0.1:*"
     />
     <title>Hello from Electron renderer!</title>
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>

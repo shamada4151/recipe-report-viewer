@@ -1,10 +1,13 @@
 import { TRPCProvider } from './providers/tRPCProvider'
-import { HelloElectron } from './Hello'
+import Home from './pages/Home'
+import MUIProvider from './providers/MUIProvider'
 
 export const App = () => {
   return (
     <TRPCProvider>
-      <HelloElectron />
+      <MUIProvider>
+        <Home />
+      </MUIProvider>
     </TRPCProvider>
   )
 }
