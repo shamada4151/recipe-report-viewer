@@ -4,17 +4,18 @@ import {
   PropsWithChildren,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useState,
 } from 'react'
 
-const PagePathContext = createContext('Report.html')
+const PagePathContext = createContext('/Report.html')
 const SetPagePathContext = createContext<Dispatch<SetStateAction<string>>>(() => {
   throw new Error('SetPagePathContext is not implemented')
 })
 
 export const PagePathProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [path, setPath] = useState('Report.html')
+  const [path, setPath] = useState('/Report.html')
 
   return (
     <PagePathContext.Provider value={path}>
@@ -25,7 +26,16 @@ export const PagePathProvider: FC<PropsWithChildren> = ({ children }) => {
 
 export const usePagePath = () => {
   const path = useContext(PagePathContext)
-  const setPath = useContext(SetPagePathContext)
+  const setPagePath = useContext(SetPagePathContext)
+
+  const setPath = useCallback(
+    (newPath: string) => {
+      if (newPath !== path) {
+        setPagePath(newPath)
+      }
+    },
+    [path]
+  )
 
   return [path, setPath] as const
 }

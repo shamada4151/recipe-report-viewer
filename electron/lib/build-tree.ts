@@ -13,7 +13,10 @@ export type TreeItem = {
   children?: Array<TreeItem>
 }
 
-export const buildReportTree = async (startPath: string, parent?: string): Promise<TreeItem> => {
+export const buildReportTree = async (
+  startPath: string,
+  parent: string = ''
+): Promise<TreeItem> => {
   const result: TreeItem = { report: { title: '' }, href: '' }
   const children: Array<Promise<TreeItem>> = []
 
@@ -26,10 +29,10 @@ export const buildReportTree = async (startPath: string, parent?: string): Promi
 
       if (stat.isDirectory()) {
         // 再帰的にサブディレクトリを探索
-        children.push(buildReportTree(filePath, path.join(parent || '', file)))
+        children.push(buildReportTree(filePath, new URL(file, `relative://${parent}/`).pathname))
       } else if (file === 'Report.html') {
         result.report = await parseReport(filePath)
-        result.href = path.join(parent || '', file)
+        result.href = new URL(file, `relative://${parent}/`).pathname
       }
     })
   )

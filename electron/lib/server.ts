@@ -24,6 +24,13 @@ export const launch = async (root: string) => {
       const $ = cheerio.load(data)
       // headタグ内のbaseタグを検索し、target属性が"_blank"のものを削除する
       $('head base[target="_blank"]').remove()
+      $('body').append(`
+        <script>
+          window.onload = function() {
+            window.parent.postMessage(window.location.href, "*");
+          }
+        </script>
+      `)
 
       // 解析後のHTMLをレスポンスとして返す
       res.send($.html())

@@ -39,6 +39,7 @@ const Home = () => {
   if (isLoading) {
     return <CircularProgress />
   }
+
   return (
     <Stack direction="row" height="100%">
       <Box height="100%" width="12rem" maxWidth="12rem" overflow="scroll">
