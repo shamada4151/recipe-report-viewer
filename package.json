@@ -2,7 +2,7 @@
   "name": "recipe-report-viewer",
   "version": "0.1.0",
   "private": true,
-  "main": "dist-electron/index.js",
+  "main": "dist-electron/main.js",
   "license": "MIT",
   "type": "commonjs",
   "scripts": {

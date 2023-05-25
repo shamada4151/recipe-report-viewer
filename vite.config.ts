@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     electron([
       {
-        entry: 'electron/index.ts',
+        entry: 'electron/main.ts',
         vite: {
           mode: 'development',
         },

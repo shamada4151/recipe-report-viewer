@@ -1,14 +1,14 @@
 import path from 'path'
-import { app, BrowserWindow } from 'electron'
-import { createIPCHandler } from 'electron-trpc/main'
+import { BrowserWindow, Menu } from 'electron'
 import isDev from 'electron-is-dev'
 
-import { appRouter } from './api/router'
+import { menu } from './menu'
 
+// build 後に参照する想定なので current directory で問題なし
 const preload = path.join(__dirname, './preload.js')
 const url = process.env['VITE_DEV_SERVER_URL']
 
-app.on('ready', () => {
+export const init = () => {
   const win = new BrowserWindow({
     // disable initial window from showing
     show: isDev ? false : true,
@@ -18,8 +18,7 @@ app.on('ready', () => {
       preload,
     },
   })
-
-  createIPCHandler({ router: appRouter, windows: [win] })
+  Menu.setApplicationMenu(menu)
 
   if (isDev && url) {
     win.loadURL(url)
@@ -27,5 +26,5 @@ app.on('ready', () => {
     win.loadFile(path.join(__dirname, '../dist', 'index.html'))
   }
 
-  win.showInactive()
-})
+  return win
+}
