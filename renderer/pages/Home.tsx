@@ -14,11 +14,12 @@ import ListItemButton from '@mui/material/ListItemButton'
 
 const Home = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
+  const { data: latest } = trpc.report.latest.useQuery()
   const { data: tree, refetch } = trpc.report.tree.useQuery({ root: server?.root || '' })
   const { data: history, isLoading: isLoadingHistory } = trpc.report.recently.useQuery()
 
-  const handleClick = () => {
-    mutate({})
+  const openReport = (root?: string) => {
+    mutate({ root })
   }
 
   useEffect(() => {
@@ -33,9 +34,23 @@ const Home = () => {
         <Stack direction="column" spacing={2} alignItems="center">
           <Typography variant="h1">Automation Center Report Viewer</Typography>
           <Typography>Report file is not selected, please click below button</Typography>
-          <Button variant="contained" onClick={handleClick}>
-            Open Report
-          </Button>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" onClick={() => openReport()}>
+              Open Report
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (!latest?.root) {
+                  alert("Latest report doe's not exist!!")
+                  return
+                }
+                openReport(latest.root)
+              }}
+            >
+              Open Latest
+            </Button>
+          </Stack>
         </Stack>
         <Stack direction="column" spacing={1} alignItems="center">
           <Typography variant="h3">Open Recent</Typography>
@@ -44,12 +59,7 @@ const Home = () => {
           ) : (
             <List>
               {history?.history.map((item) => (
-                <ListItemButton
-                  dense
-                  disableGutters
-                  key={item}
-                  onClick={() => mutate({ root: item })}
-                >
+                <ListItemButton dense disableGutters key={item} onClick={() => openReport(item)}>
                   <Typography variant="caption">{item}</Typography>
                 </ListItemButton>
               ))}

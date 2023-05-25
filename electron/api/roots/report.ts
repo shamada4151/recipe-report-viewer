@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { router, procedure } from '../trpc'
 import { buildReportTree } from '../../lib/build-tree'
-import { launchServer } from '../../lib/open-report'
+import { getLatestReportDir, launchServer } from '../../lib/open-report'
 import { BrowserWindow } from 'electron'
 import { getDirBySelectingFile } from '../../lib/openDialog'
 import { getRecentlyOpened, readReportStorage, setOpened } from '../../lib/report-storage'
@@ -45,6 +45,13 @@ export const reportRouter = router({
         root,
       }
     }),
+  latest: procedure.query(async () => {
+    const root = getLatestReportDir()
+
+    return {
+      root,
+    }
+  }),
   tree: procedure
     .input(
       z.object({
