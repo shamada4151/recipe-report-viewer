@@ -8,13 +8,6 @@
 # testing
 /coverage
 
-# next.js
-renderer/.next
-renderer/out
-
-# production
-/build
-
 # misc
 .DS_Store
 *.pem
@@ -27,14 +20,11 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
 # electron build
 /dist/
-/dist-electron/
-/main/
+/out/
+*.log*
