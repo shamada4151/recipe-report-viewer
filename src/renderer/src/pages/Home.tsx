@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -12,13 +12,13 @@ import TreeView from '@renderer/components/TreeView'
 import { trpc } from '@renderer/utils/trpc'
 import ReportView from '@renderer/components/ReportView'
 
-const Home = () => {
+const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
   const { data: latest } = trpc.report.latest.useQuery()
   const { data: tree, refetch } = trpc.report.tree.useQuery({ root: server?.root || '' })
   const { data: history, isLoading: isLoadingHistory } = trpc.report.recently.useQuery()
 
-  const openReport = (root?: string) => {
+  const openReport = (root?: string): void => {
     mutate({ root })
   }
 
@@ -35,12 +35,12 @@ const Home = () => {
           <Typography variant="h1">Automation Center Report Viewer</Typography>
           <Typography>Report file is not selected, please click below button</Typography>
           <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={() => openReport()}>
+            <Button variant="contained" onClick={(): void => openReport()}>
               Open Report test
             </Button>
             <Button
               variant="outlined"
-              onClick={() => {
+              onClick={(): void => {
                 if (!latest?.root) {
                   alert("Latest report doe's not exist!!")
                   return
@@ -59,7 +59,12 @@ const Home = () => {
           ) : (
             <List>
               {history?.history.map((item) => (
-                <ListItemButton dense disableGutters key={item} onClick={() => openReport(item)}>
+                <ListItemButton
+                  dense
+                  disableGutters
+                  key={item}
+                  onClick={(): void => openReport(item)}
+                >
                   <Typography variant="caption">{item}</Typography>
                 </ListItemButton>
               ))}

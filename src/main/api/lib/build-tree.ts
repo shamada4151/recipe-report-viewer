@@ -4,10 +4,7 @@ import path from 'path'
 import * as cheerio from 'cheerio'
 import { TreeItem, ReportInfo } from '../../../types'
 
-export const buildReportTree = async (
-  startPath: string,
-  parent: string = ''
-): Promise<TreeItem> => {
+export const buildReportTree = async (startPath: string, parent = ''): Promise<TreeItem> => {
   const result: TreeItem = { report: { title: '' }, href: '' }
   const children: Array<Promise<TreeItem>> = []
 
@@ -53,13 +50,13 @@ const parseReport = async (filePath: string): Promise<ReportInfo> => {
   })
 }
 
-const getReportTitle = (doc: cheerio.CheerioAPI) => {
+const getReportTitle = (doc: cheerio.CheerioAPI): string => {
   return doc('h3[class="panel-title"] a').first().text().trim()
 }
 
 const ERROR_KEYS = ['Exception:', 'Traceback', 'Error:']
 
-const findError = (doc: cheerio.CheerioAPI) => {
+const findError = (doc: cheerio.CheerioAPI): boolean => {
   let result = false
   doc('div[id]').each((_, elm) => {
     const $ = doc(elm)

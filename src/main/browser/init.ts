@@ -8,15 +8,15 @@ import { menu } from './menu'
 const preload = path.join(__dirname, '../preload/index.js')
 const url = process.env['ELECTRON_RENDERER_URL']
 
-export const init = () => {
+export const init = (): BrowserWindow => {
   const win = new BrowserWindow({
     // disable initial window from showing
     width: 900,
     height: 670,
     show: isDev ? false : true,
     webPreferences: {
-      preload,
-    },
+      preload
+    }
   })
   Menu.setApplicationMenu(menu)
 

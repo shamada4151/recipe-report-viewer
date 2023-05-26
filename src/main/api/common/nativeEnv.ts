@@ -1,7 +1,7 @@
 import os from 'os'
 import path from 'path'
 
-const getUserDataPath = () => {
+const getUserDataPath = (): string => {
   switch (process.platform) {
     case 'win32':
       return process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming')
@@ -10,14 +10,14 @@ const getUserDataPath = () => {
   }
 }
 
-const getAppSettingPath = () => {
+const getAppSettingPath = (): string => {
   return path.join(getUserDataPath(), 'JEOL', 'ACReportViewer')
 }
 
-const getUserSettingPath = () => {
+const getUserSettingPath = (): string => {
   return path.join(getAppSettingPath(), 'User')
 }
 
-export const getReportStoragePath = () => {
+export const getReportStoragePath = (): string => {
   return path.join(getUserSettingPath(), 'reportStorage')
 }

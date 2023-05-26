@@ -1,11 +1,12 @@
+import fs from 'fs'
+import { Server } from 'http'
 import * as net from 'net'
 import path from 'path'
-import fs from 'fs'
 
 import * as cheerio from 'cheerio'
 import express, { type RequestHandler } from 'express'
 
-export const launch = async (root: string) => {
+export const launch = async (root: string): Promise<Server> => {
   const RemoveBaseTargetMiddleware: RequestHandler = (req, res, next) => {
     const filePath = path.join(root, req.path)
 
@@ -59,12 +60,12 @@ export function findFreePortFaster(
   giveUpAfter: number,
   timeout: number
 ): Promise<number> {
-  let resolved: boolean = false
+  let resolved = false
   let timeoutHandle: NodeJS.Timeout | undefined = undefined
-  let countTried: number = 1
+  let countTried = 1
   const server = net.createServer({ pauseOnConnect: true })
 
-  function doResolve(port: number, resolve: (port: number) => void) {
+  function doResolve(port: number, resolve: (port: number) => void): void {
     if (!resolved) {
       resolved = true
       server.removeAllListeners()
@@ -84,7 +85,8 @@ export function findFreePortFaster(
     server.on('error', (err) => {
       if (
         err &&
-        ((<any>err).code === 'EADDRINUSE' || (<any>err).code === 'EACCES') &&
+        'code' in err &&
+        (err.code === 'EADDRINUSE' || err.code === 'EACCES') &&
         countTried < giveUpAfter
       ) {
         startPort++

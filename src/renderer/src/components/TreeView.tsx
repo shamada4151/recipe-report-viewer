@@ -12,7 +12,7 @@ type Props = {
 const TreeView: FC<Props> = ({ item, depth = 0 }) => {
   const [path, setPath] = usePagePath()
 
-  const handleClick = () => {
+  const handleClick = (): void => {
     setPath(item.href)
   }
 

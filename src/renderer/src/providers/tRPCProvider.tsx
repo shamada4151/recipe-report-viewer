@@ -10,7 +10,7 @@ export const TRPCProvider: FC<PropsWithChildren> = ({ children }) => {
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [ipcLink()],
-      transformer: superjson,
+      transformer: superjson
     })
   )
 

@@ -10,7 +10,7 @@ const ReportView: FC<Props> = ({ root }) => {
   const [path, setPath] = usePagePath()
 
   useEffect(() => {
-    const callback = (event: MessageEvent<any>) => {
+    const callback = (event: MessageEvent): void => {
       // 信頼できるオリジンからのメッセージかどうかを確認
       if (event.origin !== root) {
         return

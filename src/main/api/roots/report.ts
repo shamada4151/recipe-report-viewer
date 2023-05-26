@@ -14,7 +14,7 @@ export const reportRouter = router({
   open: procedure
     .input(
       z.object({
-        root: z.string().optional(),
+        root: z.string().optional()
       })
     )
     .mutation(async (opts) => {
@@ -23,7 +23,7 @@ export const reportRouter = router({
       if (window === null) {
         return {
           port: 0,
-          root: '',
+          root: ''
         }
       }
       if (root === undefined || fs.existsSync(root) === false) {
@@ -36,19 +36,19 @@ export const reportRouter = router({
       setOpened(root)
       return {
         port: (server.address() as AddressInfo).port,
-        root,
+        root
       }
     }),
   latest: procedure.query(async () => {
     const root = getLatestReportDir()
     return {
-      root,
+      root
     }
   }),
   tree: procedure
     .input(
       z.object({
-        root: z.string(),
+        root: z.string()
       })
     )
     .query(async (opts) => {
@@ -67,7 +67,7 @@ export const reportRouter = router({
       })
       .filter((value): value is string => typeof value === 'string')
     return {
-      history: folders,
+      history: folders
     }
-  }),
+  })
 })

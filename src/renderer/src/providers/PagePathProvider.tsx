@@ -6,7 +6,7 @@ import {
   createContext,
   useCallback,
   useContext,
-  useState,
+  useState
 } from 'react'
 
 const PagePathContext = createContext('/Report.html')
@@ -24,7 +24,7 @@ export const PagePathProvider: FC<PropsWithChildren> = ({ children }) => {
   )
 }
 
-export const usePagePath = () => {
+export const usePagePath = (): readonly [string, (newPath: string) => void] => {
   const path = useContext(PagePathContext)
   const setPagePath = useContext(SetPagePathContext)
 

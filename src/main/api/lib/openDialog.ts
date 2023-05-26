@@ -8,9 +8,9 @@ export const getDirBySelectingFile = async (parent: BrowserWindow): Promise<stri
     filters: [
       {
         name: 'html',
-        extensions: ['html'],
-      },
-    ],
+        extensions: ['html']
+      }
+    ]
   })
   if (results.canceled || results.filePaths.length === 0) {
     return ''

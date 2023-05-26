@@ -9,23 +9,24 @@ type ReportStorage = {
   folder: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isReportStorage = (obj: any): obj is ReportStorage => {
   return obj !== null && typeof obj === 'object' && typeof obj.folder === 'string'
 }
 
-export const setOpened = (openedPath: string) => {
+export const setOpened = (openedPath: string): void => {
   const storage = getReportStoragePath()
 
   const dirName = crypto.createHash('md5').update(openedPath).digest('hex')
   const dirPath = path.join(storage, dirName)
   if (fs.existsSync(dirPath) === false) {
     fs.mkdirSync(dirPath, {
-      recursive: true,
+      recursive: true
     })
   }
 
   const data: ReportStorage = {
-    folder: openedPath,
+    folder: openedPath
   }
   fs.writeFile(path.join(dirPath, FILE_NAME), JSON.stringify(data), (err) => {
     if (err) {
@@ -35,7 +36,7 @@ export const setOpened = (openedPath: string) => {
   })
 }
 
-export const readReportStorage = (filePath: string) => {
+export const readReportStorage = (filePath: string): ReportStorage | null => {
   if (fs.existsSync(filePath) === false) {
     return null
   }
@@ -53,7 +54,7 @@ type TempDir = {
   mtime: Date
   isDir: boolean
 }
-export const getRecentlyOpened = (limit: number = 5): Promise<Array<string>> => {
+export const getRecentlyOpened = (limit = 5): Promise<Array<string>> => {
   const storage = getReportStoragePath()
 
   return new Promise<Array<string>>((resolve) =>
@@ -74,13 +75,13 @@ export const getRecentlyOpened = (limit: number = 5): Promise<Array<string>> => 
                     resolve({
                       file,
                       mtime: new Date(),
-                      isDir: false,
+                      isDir: false
                     })
                   }
                   resolve({
                     file,
                     mtime: stats.mtime,
-                    isDir: stats.isDirectory(),
+                    isDir: stats.isDirectory()
                   })
                 })
               })

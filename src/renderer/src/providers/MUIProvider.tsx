@@ -9,38 +9,38 @@ const customTheme = createTheme({
   typography: {
     h1: {
       fontSize: '3 rem',
-      fontWeight: 'bold',
+      fontWeight: 'bold'
     },
     h2: {
       fontSize: '2.5rem',
-      fontWeight: 'bold',
+      fontWeight: 'bold'
     },
     h3: {
-      fontSize: '2rem',
+      fontSize: '2rem'
     },
     h4: {
-      fontSize: '1.75rem',
+      fontSize: '1.75rem'
     },
     h5: {
-      fontSize: '1.5rem',
+      fontSize: '1.5rem'
     },
     h6: {
-      fontSize: '1.25rem',
+      fontSize: '1.25rem'
     },
     body2: {
-      fontSize: '0.8rem',
+      fontSize: '0.8rem'
     },
     fontFamily: ['"Roboto"', '"Noto Sans JP"', 'sans-serif'].join(','),
     button: {
-      textTransform: 'none',
-    },
-  },
+      textTransform: 'none'
+    }
+  }
 })
 
 const MUIProvider: FC<PropsWithChildren> = ({ children }) => {
   const cache = createCache({
     key: 'emotion-cache',
-    prepend: true,
+    prepend: true
   })
 
   return (

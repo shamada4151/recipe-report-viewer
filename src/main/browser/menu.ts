@@ -9,20 +9,20 @@ const template: MenuItemConstructorOptions[] = [
       {
         label: 'New Window',
         accelerator: 'Ctrl+Shift+N',
-        click: () => {
+        click: (): void => {
           init().show()
-        },
+        }
       },
       {
-        type: 'separator',
+        type: 'separator'
       },
       {
-        role: 'close',
-      },
-    ],
+        role: 'close'
+      }
+    ]
   },
   { role: 'viewMenu' },
-  { role: 'help', submenu: [{ role: 'about' }] },
+  { role: 'help', submenu: [{ role: 'about' }] }
 ]
 
 // macOS では "アプリメニュー" が必要
