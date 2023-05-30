@@ -5,10 +5,10 @@ import { BrowserWindow } from 'electron'
 import { z } from 'zod'
 
 import { router, procedure } from '../trpc'
-import { buildReportTree } from '../lib/build-tree'
-import { getLatestReportDir, launchServer } from '../lib/open-report'
-import { getDirBySelectingFile } from '../lib/openDialog'
-import { getRecentlyOpened, readReportStorage, setOpened } from '../lib/report-storage'
+import { buildReportTree } from '../../lib/build-tree'
+import { getLatestReportDir, launchServer } from '../../lib/open-report'
+import { getDirBySelectingFile } from '../../lib/openDialog'
+import { getRecentlyOpened, readReportStorage, setOpened } from '../../lib/report-storage'
 
 export const reportRouter = router({
   open: procedure

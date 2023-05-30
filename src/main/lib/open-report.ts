@@ -4,8 +4,8 @@ import path from 'path'
 
 import { app } from 'electron'
 
-import { launch } from './server'
-import { LATEST_REPORT } from '../common/ac-config'
+import { launch } from '@main/server'
+import { LATEST_REPORT } from '@main/common/ac-config'
 
 export const launchServer = async (root: string): Promise<Server> => {
   const server = await launch(root)
