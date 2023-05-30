@@ -22,7 +22,7 @@ const template: MenuItemConstructorOptions[] = [
     ]
   },
   { role: 'viewMenu' },
-  { role: 'help', submenu: [{ role: 'about' }] }
+  { role: 'help', submenu: [{ role: 'about' }, { label: 'Report issue' }] }
 ]
 
 // macOS では "アプリメニュー" が必要
