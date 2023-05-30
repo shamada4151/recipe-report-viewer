@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import * as cheerio from 'cheerio'
-import { TreeItem, ReportInfo } from '../../../types'
+import { TreeItem, ReportInfo } from '../../types'
 
 export const buildReportTree = async (startPath: string, parent = ''): Promise<TreeItem> => {
   const result: TreeItem = { report: { title: '' }, href: '' }
