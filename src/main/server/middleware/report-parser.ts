@@ -22,6 +22,7 @@ export const ReportParserMiddleware = (root: string): RequestHandler => {
       const $ = cheerio.load(data)
       removeLinkTarget($)
       addLoadedEventHandler($)
+      addActivityId($)
 
       // 解析後のHTMLをレスポンスとして返す
       res.send($.html())
@@ -43,4 +44,19 @@ const addLoadedEventHandler = ($: cheerio.CheerioAPI): void => {
       }
     </script>
   `)
+}
+
+const addActivityId = ($: cheerio.CheerioAPI): void => {
+  $('h3[class="panel-title"] a').each((i, elm) => {
+    const id = $(elm)
+      .text()
+      .replace(/\[\d+\]/, '')
+      .trim()
+      .replaceAll(' ', '_')
+      .replaceAll('#', '')
+      .toLowerCase()
+
+    // 同じアクティビティで id の重複を避ける
+    $(elm).parent().attr('id', `${id}_${i}`)
+  })
 }
