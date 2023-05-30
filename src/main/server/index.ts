@@ -1,46 +1,13 @@
-import fs from 'fs'
 import { Server } from 'http'
 import * as net from 'net'
-import path from 'path'
 
-import * as cheerio from 'cheerio'
-import express, { type RequestHandler } from 'express'
+import express from 'express'
+import { ReportParserMiddleware } from './middleware/report-parser'
 
 export const launch = async (root: string): Promise<Server> => {
-  const RemoveBaseTargetMiddleware: RequestHandler = (req, res, next) => {
-    const filePath = path.join(root, req.path)
-
-    if (filePath.endsWith('.html') === false) {
-      next()
-      return
-    }
-
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        console.log(err)
-        next() // ファイルが見つからなければ、次のミドルウェアに引き渡す
-        return
-      }
-
-      const $ = cheerio.load(data)
-      // headタグ内のbaseタグを検索し、target属性が"_blank"のものを削除する
-      $('head base[target="_blank"]').remove()
-      $('body').append(`
-        <script>
-          window.onload = function() {
-            window.parent.postMessage(window.location.href, "*");
-          }
-        </script>
-      `)
-
-      // 解析後のHTMLをレスポンスとして返す
-      res.send($.html())
-    })
-  }
-
   const app = express()
 
-  app.use(RemoveBaseTargetMiddleware)
+  app.use(ReportParserMiddleware(root))
   app.use(express.static(root))
 
   const port = await findFreePortFaster(3000, 100, 1000)

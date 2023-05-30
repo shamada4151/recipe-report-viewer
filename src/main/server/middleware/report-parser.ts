@@ -1,19 +1,18 @@
 import fs from 'fs'
 import path from 'path'
 
-import { RequestHandler } from 'express'
+import type { RequestHandler } from 'express'
 import * as cheerio from 'cheerio'
 
 export const ReportParserMiddleware = (root: string): RequestHandler => {
   return (req, res, next) => {
-    const filePath = path.join(root, req.path)
-
-    if (filePath.endsWith('.html') === false) {
+    // css や js などもこのミドルウェアを通るため
+    if (req.path.endsWith('.html') === false) {
       next()
       return
     }
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(path.join(root, req.path), 'utf8', (err, data) => {
       if (err) {
         console.log(err)
         next() // ファイルが見つからなければ、次のミドルウェアに引き渡す
@@ -21,18 +20,27 @@ export const ReportParserMiddleware = (root: string): RequestHandler => {
       }
 
       const $ = cheerio.load(data)
-      // headタグ内のbaseタグを検索し、target属性が"_blank"のものを削除する
-      $('head base[target="_blank"]').remove()
-      $('body').append(`
-        <script>
-          window.onload = function() {
-            window.parent.postMessage(window.location.href, "*");
-          }
-        </script>
-      `)
+      removeLinkTarget($)
+      addLoadedEventHandler($)
 
       // 解析後のHTMLをレスポンスとして返す
       res.send($.html())
     })
   }
+}
+
+const removeLinkTarget = ($: cheerio.CheerioAPI): void => {
+  // リンクを新しいウィンドウで開かないようにする
+  $('head base[target="_blank"]').remove()
+}
+
+const addLoadedEventHandler = ($: cheerio.CheerioAPI): void => {
+  // ページ遷移を通知するためのイベントを追加
+  $('body').append(`
+    <script>
+      window.onload = function() {
+        window.parent.postMessage(window.location.href, "*");
+      }
+    </script>
+  `)
 }
