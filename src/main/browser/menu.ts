@@ -1,5 +1,6 @@
 import { Menu, MenuItemConstructorOptions } from 'electron'
 import { init } from './init'
+import { issueEventEmitter } from '@main/api/roots/issues'
 
 // メニューのテンプレート配列を作成
 const template: MenuItemConstructorOptions[] = [
@@ -22,7 +23,18 @@ const template: MenuItemConstructorOptions[] = [
     ]
   },
   { role: 'viewMenu' },
-  { role: 'help', submenu: [{ role: 'about' }] }
+  {
+    role: 'help',
+    submenu: [
+      { role: 'about' },
+      {
+        label: 'Report issue',
+        click: (): void => {
+          issueEventEmitter.emit('open')
+        }
+      }
+    ]
+  }
 ]
 
 // macOS では "アプリメニュー" が必要
