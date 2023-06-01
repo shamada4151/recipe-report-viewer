@@ -7,8 +7,9 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import { trpc } from '@renderer/utils/trpc'
 import Alert from '@mui/material/Alert'
+
+import { trpc } from '@renderer/utils/trpc'
 
 type Props = {
   open: boolean
