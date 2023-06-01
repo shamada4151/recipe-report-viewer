@@ -15,25 +15,34 @@ const isReportStorage = (obj: any): obj is ReportStorage => {
 }
 
 export const setOpened = (openedPath: string): void => {
-  const storage = getReportStoragePath()
+  const dirName = path.join(
+    getReportStoragePath(),
+    crypto.createHash('md5').update(openedPath).digest('hex')
+  )
 
-  const dirName = crypto.createHash('md5').update(openedPath).digest('hex')
-  const dirPath = path.join(storage, dirName)
-  if (fs.existsSync(dirPath) === false) {
-    fs.mkdirSync(dirPath, {
+  if (fs.existsSync(dirName) === false) {
+    fs.mkdirSync(dirName, {
       recursive: true
     })
-  }
 
-  const data: ReportStorage = {
-    folder: openedPath
-  }
-  fs.writeFile(path.join(dirPath, FILE_NAME), JSON.stringify(data), (err) => {
-    if (err) {
-      console.error(err)
-      throw err
+    const data: ReportStorage = {
+      folder: openedPath
     }
-  })
+    fs.writeFile(path.join(dirName, FILE_NAME), JSON.stringify(data), (err) => {
+      if (err) {
+        console.error(err)
+        throw err
+      }
+    })
+  } else {
+    // directory に touch して更新日時を最新にする
+    const time = new Date()
+    fs.utimes(dirName, time, time, (err) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+  }
 }
 
 export const readReportStorage = (filePath: string): ReportStorage | null => {
