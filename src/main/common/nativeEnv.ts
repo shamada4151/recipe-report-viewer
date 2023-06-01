@@ -1,12 +1,21 @@
 import os from 'os'
 import path from 'path'
 
+export const getApplicationDir = (): string => {
+  switch (process.platform) {
+    case 'win32':
+      return path.join(os.homedir(), 'AppData')
+    default:
+      return os.homedir()
+  }
+}
+
 const getUserDataPath = (): string => {
   switch (process.platform) {
     case 'win32':
-      return process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming')
+      return path.join(getApplicationDir(), 'Roaming')
     default:
-      return path.join(os.homedir(), '.config')
+      return path.join(getApplicationDir(), '.config')
   }
 }
 
