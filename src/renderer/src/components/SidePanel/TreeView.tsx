@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { TreeItem } from '../../../types'
+import { TreeItem } from '../../../../types'
 import { usePagePath } from '@renderer/providers/PagePathProvider'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'

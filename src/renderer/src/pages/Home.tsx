@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -8,25 +8,18 @@ import Typography from '@mui/material/Typography'
 import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 
-import TreeView from '@renderer/components/TreeView'
-import { trpc } from '@renderer/utils/trpc'
 import ReportView from '@renderer/components/ReportView'
+import SidePanel from '@renderer/components/SidePanel'
+import { trpc } from '@renderer/utils/trpc'
 
 const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
   const { data: latest } = trpc.report.latest.useQuery()
-  const { data: tree, refetch } = trpc.report.tree.useQuery({ root: server?.root || '' })
   const { data: history, isLoading: isLoadingHistory } = trpc.report.recently.useQuery()
 
   const openReport = (root?: string): void => {
     mutate({ root })
   }
-
-  useEffect(() => {
-    if (server?.root) {
-      refetch()
-    }
-  }, [server?.root])
 
   if (!server?.port) {
     return (
@@ -81,9 +74,7 @@ const Home: FC = () => {
 
   return (
     <Stack direction="row" height="100%">
-      <Box height="100%" width="12rem" maxWidth="12rem" overflow="scroll">
-        {tree?.tree && <TreeView item={tree.tree} />}
-      </Box>
+      <SidePanel root={server.root} />
       <Box height="100%" sx={{ flexGrow: 1 }}>
         <ReportView root={`http://127.0.0.1:${server.port}`} />
       </Box>
