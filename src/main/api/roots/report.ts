@@ -9,6 +9,24 @@ import { buildReportTree } from '../../lib/build-tree'
 import { getLatestReportDir, launchServer } from '../../lib/open-report'
 import { getDirBySelectingFile } from '../../lib/openDialog'
 import { getRecentlyOpened, readReportStorage, setOpened } from '../../lib/report-storage'
+import { TreeItem } from 'src/types'
+
+type OpenResponse = {
+  /**
+   * html 表示用サーバーのポート番号
+   * 立ち上げ失敗時は 0 を返す
+   */
+  port: number
+  /**
+   * 開いたレポートファイルの root directory
+   * 立ち上げ失敗時は Empty String を返す
+   */
+  root: string
+}
+
+type TreeResponse = {
+  item: TreeItem | null
+}
 
 export const reportRouter = router({
   open: procedure
@@ -17,7 +35,7 @@ export const reportRouter = router({
         root: z.string().optional()
       })
     )
-    .mutation(async (opts) => {
+    .mutation<OpenResponse>(async (opts) => {
       let root = opts.input.root
       const window = BrowserWindow.getFocusedWindow()
       if (window === null) {
@@ -29,11 +47,14 @@ export const reportRouter = router({
       if (root === undefined || fs.existsSync(root) === false) {
         root = await getDirBySelectingFile(window)
       }
+
       const server = await launchServer(root)
       window.on('close', () => {
         server.close()
       })
+
       setOpened(root)
+
       return {
         port: (server.address() as AddressInfo).port,
         root
@@ -51,13 +72,13 @@ export const reportRouter = router({
         root: z.string()
       })
     )
-    .query(async (opts) => {
+    .query<TreeResponse>(async (opts) => {
       const { root } = opts.input
       if (!root) {
-        return { tree: null }
+        return { item: null }
       }
       const tree = await buildReportTree(root)
-      return { tree }
+      return { item: tree }
     }),
   recently: procedure.query(async () => {
     const folders = (await getRecentlyOpened())
