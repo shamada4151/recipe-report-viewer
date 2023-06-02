@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Collapse from '@mui/material/Collapse'
@@ -6,18 +6,16 @@ import TextField from '@mui/material/TextField'
 import SearchIcon from '@mui/icons-material/Search'
 import IconButton from '@mui/material/IconButton'
 
+import { useSearchQuery } from './SearchProvider'
+
 const Header: FC = () => {
   const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useSearchQuery()
 
   const toggleOpen = useCallback(() => {
     setOpen((val) => !val)
     setQuery('')
   }, [])
-
-  useEffect(() => {
-    console.log(query)
-  }, [query])
 
   return (
     <Box px={0.5}>
