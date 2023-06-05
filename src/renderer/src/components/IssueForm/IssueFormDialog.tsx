@@ -10,6 +10,8 @@ import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 
 import { trpc } from '@renderer/utils/trpc'
+import { useAlertMessage } from '../Alert'
+import CircularProgress from '@mui/material/CircularProgress'
 
 type Props = {
   open: boolean
@@ -19,14 +21,17 @@ const IssueFormDialog: FC<Props> = ({ open, onClose }) => {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
 
+  const alert = useAlertMessage()
+
   const handleClose = useCallback((): void => {
+    alert({ message: 'Thank you for the report!!' })
     setTitle('')
     setBody('')
 
     onClose()
   }, [])
 
-  const { mutate, error } = trpc.issues.create.useMutation({
+  const { mutate, error, isLoading } = trpc.issues.create.useMutation({
     onSuccess: handleClose
   })
 
@@ -67,9 +72,13 @@ const IssueFormDialog: FC<Props> = ({ open, onClose }) => {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" type="submit">
-            Submit Issue
-          </Button>
+          {isLoading ? (
+            <CircularProgress size={32} />
+          ) : (
+            <Button variant="contained" type="submit">
+              Submit Issue
+            </Button>
+          )}
         </DialogActions>
       </form>
     </Dialog>

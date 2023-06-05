@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useState } from 'react'
 
-import IssueFormDialog from '@renderer/components/IssueFormDialog'
+import IssueFormDialog from '@renderer/components/IssueForm/IssueFormDialog'
 import { trpc } from '@renderer/utils/trpc'
 
 export const IssueFormProvider: FC<PropsWithChildren> = ({ children }) => {

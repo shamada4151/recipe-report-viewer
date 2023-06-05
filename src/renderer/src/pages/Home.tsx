@@ -11,6 +11,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ReportView from '@renderer/components/ReportView'
 import SidePanel from '@renderer/components/SidePanel'
 import { trpc } from '@renderer/utils/trpc'
+import { useAlertMessage } from '@renderer/components/Alert'
 
 const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
@@ -20,13 +21,14 @@ const Home: FC = () => {
   const openReport = (root?: string): void => {
     mutate({ root })
   }
+  const alert = useAlertMessage()
 
   if (!server?.port) {
     return (
       <Stack direction="column" spacing={4} alignItems="center" p={4}>
         <Stack direction="column" spacing={2} alignItems="center">
           <Typography variant="h1">Automation Center Report Viewer</Typography>
-          <Typography>Report file is not selected, please click below button</Typography>
+          <Typography>You have not yet opened a report</Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={(): void => openReport()}>
               Open Report test
@@ -35,7 +37,7 @@ const Home: FC = () => {
               variant="outlined"
               onClick={(): void => {
                 if (!latest?.root) {
-                  alert("Latest report doe's not exist!!")
+                  alert({ message: "Latest report doe's not exist!!", severity: 'warning' })
                   return
                 }
                 openReport(latest.root)
