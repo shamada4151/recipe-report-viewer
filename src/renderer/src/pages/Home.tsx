@@ -11,6 +11,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ReportView from '@renderer/components/ReportView'
 import SidePanel from '@renderer/components/SidePanel'
 import { trpc } from '@renderer/utils/trpc'
+import { useAlertMessage } from '@renderer/components/Alert'
 
 const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
@@ -20,6 +21,7 @@ const Home: FC = () => {
   const openReport = (root?: string): void => {
     mutate({ root })
   }
+  const alert = useAlertMessage()
 
   if (!server?.port) {
     return (
@@ -35,7 +37,7 @@ const Home: FC = () => {
               variant="outlined"
               onClick={(): void => {
                 if (!latest?.root) {
-                  alert("Latest report doe's not exist!!")
+                  alert({ message: "Latest report doe's not exist!!", severity: 'warning' })
                   return
                 }
                 openReport(latest.root)
