@@ -29,8 +29,8 @@ export const issuesRouter = router({
         body: z.string().optional()
       })
     )
-    .mutation((opts) => {
+    .mutation(async (opts) => {
       const { title, body } = opts.input
-      createIssues({ title, body })
+      await createIssues({ title, body })
     })
 })

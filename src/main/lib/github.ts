@@ -11,7 +11,7 @@ type IssueBody = {
  * @param body
  */
 export const createIssues = async (body: IssueBody): Promise<void> => {
-  fetch(import.meta.env.MAIN_VITE_GITHUB_ISSUES_URL, {
+  await fetch(import.meta.env.MAIN_VITE_GITHUB_ISSUES_URL, {
     method: 'POST',
     body: JSON.stringify({ ...body, labels: ['report'] }),
     agent: new ProxyAgent(),

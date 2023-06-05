@@ -28,7 +28,7 @@ const Home: FC = () => {
       <Stack direction="column" spacing={4} alignItems="center" p={4}>
         <Stack direction="column" spacing={2} alignItems="center">
           <Typography variant="h1">Automation Center Report Viewer</Typography>
-          <Typography>Report file is not selected, please click below button</Typography>
+          <Typography>You have not yet opened a report</Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={(): void => openReport()}>
               Open Report test
