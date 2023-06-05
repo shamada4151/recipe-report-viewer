@@ -17,6 +17,7 @@ const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
   const { data: latest } = trpc.report.latest.useQuery()
   const { data: history, isLoading: isLoadingHistory } = trpc.report.recently.useQuery()
+  const { mutate: menu } = trpc.menu.show.useMutation()
 
   const openReport = (root?: string): void => {
     mutate({ root })
@@ -31,7 +32,7 @@ const Home: FC = () => {
           <Typography>You have not yet opened a report</Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={(): void => openReport()}>
-              Open Report test
+              Open Report
             </Button>
             <Button
               variant="outlined"
@@ -75,12 +76,19 @@ const Home: FC = () => {
   }
 
   return (
-    <Stack direction="row" height="100%">
-      <SidePanel root={server.root} />
-      <Box height="100%" sx={{ flexGrow: 1 }}>
-        <ReportView root={`http://127.0.0.1:${server.port}`} />
-      </Box>
-    </Stack>
+    <Box
+      height="100%"
+      onContextMenu={(): void => {
+        menu({ report: server.root })
+      }}
+    >
+      <Stack direction="row" height="100%">
+        <SidePanel root={server.root} />
+        <Box height="100%" sx={{ flexGrow: 1 }}>
+          <ReportView root={`http://127.0.0.1:${server.port}`} />
+        </Box>
+      </Stack>
+    </Box>
   )
 }
 
