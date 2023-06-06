@@ -1,5 +1,6 @@
-import { observable } from '@trpc/server/observable'
 import { EventEmitter } from 'events'
+
+import { observable } from '@trpc/server/observable'
 
 import { router, procedure } from '../trpc'
 import { z } from 'zod'

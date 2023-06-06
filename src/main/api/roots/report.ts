@@ -36,7 +36,6 @@ export const reportRouter = router({
       })
     )
     .mutation<OpenResponse>(async (opts) => {
-      let root = opts.input.root
       const window = BrowserWindow.getFocusedWindow()
       if (window === null) {
         return {
@@ -44,6 +43,8 @@ export const reportRouter = router({
           root: ''
         }
       }
+
+      let root = opts.input.root
       if (root === undefined || fs.existsSync(root) === false) {
         root = await getDirBySelectingFile(window)
       }
