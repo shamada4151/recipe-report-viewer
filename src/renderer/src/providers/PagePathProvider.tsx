@@ -24,6 +24,10 @@ export const PagePathProvider: FC<PropsWithChildren> = ({ children }) => {
   )
 }
 
+/**
+ *
+ * @returns path: Web サーバー上の相対パス
+ */
 export const usePagePath = (): readonly [string, (newPath: string) => void] => {
   const path = useContext(PagePathContext)
   const setPagePath = useContext(SetPagePathContext)

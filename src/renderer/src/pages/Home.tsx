@@ -12,6 +12,7 @@ import ReportView from '@renderer/components/ReportView'
 import SidePanel from '@renderer/components/SidePanel'
 import { trpc } from '@renderer/utils/trpc'
 import { useAlertMessage } from '@renderer/components/Alert'
+import { TreeItemProvider } from '@renderer/providers/TreeItemProvider'
 
 const Home: FC = () => {
   const { data: server, isLoading, mutate } = trpc.report.open.useMutation()
@@ -76,19 +77,21 @@ const Home: FC = () => {
   }
 
   return (
-    <Box
-      height="100%"
-      onContextMenu={(): void => {
-        menu({ report: server.root })
-      }}
-    >
-      <Stack direction="row" height="100%">
-        <SidePanel root={server.root} />
-        <Box height="100%" sx={{ flexGrow: 1 }}>
-          <ReportView root={`http://127.0.0.1:${server.port}`} />
-        </Box>
-      </Stack>
-    </Box>
+    <TreeItemProvider directory={server.root}>
+      <Box
+        height="100%"
+        onContextMenu={(): void => {
+          menu({ report: server.root })
+        }}
+      >
+        <Stack direction="row" height="100%">
+          <SidePanel />
+          <Box height="100%" sx={{ flexGrow: 1 }}>
+            <ReportView root={`http://127.0.0.1:${server.port}`} />
+          </Box>
+        </Stack>
+      </Box>
+    </TreeItemProvider>
   )
 }
 
