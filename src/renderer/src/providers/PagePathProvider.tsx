@@ -34,6 +34,7 @@ export const usePagePath = (): readonly [string, (newPath: string) => void] => {
 
   const setPath = useCallback(
     (newPath: string) => {
+      console.log(newPath)
       if (newPath !== path) {
         setPagePath(newPath)
       }

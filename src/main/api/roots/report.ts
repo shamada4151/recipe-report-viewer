@@ -10,6 +10,15 @@ import { getLatestReportDir, launchServer } from '../../lib/open-report'
 import { getDirBySelectingFile } from '../../lib/openDialog'
 import { getRecentlyOpened, readReportStorage, setOpened } from '../../lib/report-storage'
 import { TreeItem } from 'src/types'
+import EventEmitter from 'events'
+import { observable } from '@trpc/server/observable'
+
+export const reportEventEmitter = new EventEmitter()
+
+type ActivityId = {
+  id: string
+  hasError: boolean
+}
 
 type OpenResponse = {
   /**
@@ -91,5 +100,18 @@ export const reportRouter = router({
     return {
       history: folders
     }
+  }),
+  activities: procedure.subscription(() => {
+    return observable<{ activities: Array<ActivityId> }>((emit) => {
+      function onActivitiesParsed(args: Array<ActivityId>): void {
+        emit.next({ activities: args })
+      }
+
+      reportEventEmitter.on('activities', onActivitiesParsed)
+
+      return (): void => {
+        reportEventEmitter.off('activities', onActivitiesParsed)
+      }
+    })
   })
 })
