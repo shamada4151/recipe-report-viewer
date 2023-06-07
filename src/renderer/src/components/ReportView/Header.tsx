@@ -11,8 +11,9 @@ import GoToError from './GoToError'
 
 const checkStringPrefix = (str1: string, str2: string): boolean => {
   // split the strings into arrays by '/'
-  const arr1 = str1.split('/').filter((item) => item && item !== 'Report.html')
-  const arr2 = str2.split('/').filter((item) => item && item !== 'Report.html')
+  // prefix だけ調べたいので末尾は無視する
+  const arr1 = str1.split('/').slice(0, -1)
+  const arr2 = str2.split('/').slice(0, -1)
 
   // check if the strings have same prefix
   const minLength = Math.min(arr1.length, arr2.length)
@@ -55,7 +56,7 @@ const Header: FC = () => {
 
   const crumbs = useMemo<Array<Crumb>>(() => {
     if (tree) {
-      return findParents(tree, page).map((item) => ({
+      return findParents(tree, page.replace(/#.+/, '')).map((item) => ({
         label: item.report.title,
         href: item.href
       }))
