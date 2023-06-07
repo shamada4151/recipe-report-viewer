@@ -7,7 +7,7 @@ import { useTreeItem } from '@renderer/providers/TreeItemProvider'
 import { TreeItem } from 'src/types'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
-import GoToError from './GoToError'
+import MoveActivity from './MoveActivity'
 
 const checkStringPrefix = (str1: string, str2: string): boolean => {
   // split the strings into arrays by '/'
@@ -67,7 +67,7 @@ const Header: FC = () => {
 
   return (
     <Box px={1}>
-      <Stack direction="row" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Breadcrumbs
           sx={{
             ol: {
@@ -102,7 +102,7 @@ const Header: FC = () => {
             )
           )}
         </Breadcrumbs>
-        <GoToError />
+        <MoveActivity />
       </Stack>
     </Box>
   )

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Stack from '@mui/material/Stack'
 import IconButton from '@mui/material/IconButton'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
@@ -23,10 +23,10 @@ function appendOrReplaceWithHash(text: string, originalString: string): string {
   }
 }
 
-const GoToError: FC = () => {
-  const [index, setIndex] = useState(-1)
+const MoveActivity: FC = () => {
+  const [index, setIndex] = useState(0)
   const [ids, setIds] = useState<Array<string>>([])
-  const [path, setPath] = usePagePath()
+  const [page, setPage] = usePagePath()
   trpc.report.activities.useSubscription(undefined, {
     onData(data) {
       setIds(data.activities.map((activity) => activity.id))
@@ -36,7 +36,7 @@ const GoToError: FC = () => {
   const handleUp = (): void => {
     setIndex((prev) => {
       const next = prev - 1 <= 0 ? 0 : prev - 1
-      setPath(appendOrReplaceWithHash(ids[next], path))
+      setPage(appendOrReplaceWithHash(ids[next], page))
       return next
     })
   }
@@ -44,21 +44,27 @@ const GoToError: FC = () => {
   const handleDown = (): void => {
     setIndex((prev) => {
       const next = prev + 1 >= ids.length ? prev : prev + 1
-      setPath(appendOrReplaceWithHash(ids[next] || '', path))
+      setPage(appendOrReplaceWithHash(ids[next] || '', page))
       return next
     })
   }
 
+  useEffect(() => {
+    if (page.lastIndexOf('#') === -1) {
+      setIndex(0)
+    }
+  }, [page])
+
   return (
     <Stack direction="row">
-      <IconButton onClick={handleUp} disabled={index <= 0}>
-        <ArrowUpwardIcon />
+      <IconButton size="small" onClick={handleUp} disabled={index <= 0}>
+        <ArrowUpwardIcon fontSize="inherit" />
       </IconButton>
-      <IconButton onClick={handleDown} disabled={index >= ids.length - 1}>
-        <ArrowDownwardIcon />
+      <IconButton size="small" onClick={handleDown} disabled={index >= ids.length - 1}>
+        <ArrowDownwardIcon fontSize="inherit" />
       </IconButton>
     </Stack>
   )
 }
 
-export default GoToError
+export default MoveActivity
