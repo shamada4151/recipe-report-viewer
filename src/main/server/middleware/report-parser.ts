@@ -3,6 +3,8 @@ import path from 'path'
 
 import type { RequestHandler } from 'express'
 import * as cheerio from 'cheerio'
+import { getActivities, getOutputs, hasErrorOnOutput } from '@main/lib/report'
+import { reportEventEmitter } from '@main/api/roots/report'
 
 export const ReportParserMiddleware = (root: string): RequestHandler => {
   return (req, res, next) => {
@@ -23,6 +25,10 @@ export const ReportParserMiddleware = (root: string): RequestHandler => {
       removeLinkTarget($)
       addLoadedEventHandler($)
       addActivityId($)
+      addErrorClass($)
+
+      // 解析結果を反映したいたいめ最後に実行する
+      notifyActivitiesId($)
 
       // 解析後のHTMLをレスポンスとして返す
       res.send($.html())
@@ -47,8 +53,11 @@ const addLoadedEventHandler = ($: cheerio.CheerioAPI): void => {
 }
 
 const addActivityId = ($: cheerio.CheerioAPI): void => {
-  $('h3[class="panel-title"] a').each((i, elm) => {
-    const id = $(elm)
+  const activities = getActivities($)
+  activities.each((i, activity) => {
+    const id = $(activity)
+      .find('.panel-title > a')
+      .first()
       .text()
       .replace(/\[\d+\]/, '')
       .trim()
@@ -57,6 +66,33 @@ const addActivityId = ($: cheerio.CheerioAPI): void => {
       .toLowerCase()
 
     // 同じアクティビティで id の重複を避ける
-    $(elm).parent().attr('id', `${id}_${i}`)
+    $(activity).attr('id', `${id}_${i}`)
   })
+}
+
+const addErrorClass = ($: cheerio.CheerioAPI): void => {
+  const activities = getActivities($)
+  activities.each((_, activity) => {
+    getOutputs($(activity)).each((_, collapse) => {
+      if (hasErrorOnOutput($(collapse).text())) {
+        $(activity).addClass('error')
+      }
+    })
+  })
+}
+
+const notifyActivitiesId = ($: cheerio.CheerioAPI): void => {
+  const activities = getActivities($)
+
+  reportEventEmitter.emit(
+    'activities',
+    activities
+      .map((_, activity) => {
+        return {
+          id: activity.attribs['id'],
+          hasError: hasErrorOnOutput(getOutputs($(activity)).text())
+        }
+      })
+      .toArray()
+  )
 }

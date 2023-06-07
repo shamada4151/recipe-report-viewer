@@ -39,7 +39,6 @@ const IssueFormDialog: FC<Props> = ({ open, onClose }) => {
     (e) => {
       e.preventDefault()
 
-      console.log({ title, body })
       mutate({ title, body })
     },
     [title, body]

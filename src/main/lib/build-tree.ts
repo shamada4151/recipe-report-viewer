@@ -3,6 +3,7 @@ import path from 'path'
 
 import * as cheerio from 'cheerio'
 import { TreeItem, ReportInfo } from '../../types'
+import { getOutputs, hasErrorOnOutput } from './report'
 
 export const buildReportTree = async (startPath: string, parent = ''): Promise<TreeItem> => {
   const result: TreeItem = { report: { title: '' }, href: '' }
@@ -41,7 +42,7 @@ const parseReport = async (filePath: string): Promise<ReportInfo> => {
       }
 
       const $ = cheerio.load(data)
-      const error = findError($)
+      const error = hasError($)
       // headタグ内のbaseタグを検索し、target属性が"_blank"のものを削除する
       const title = getReportTitle($)
       resolve({ title, error })
@@ -54,20 +55,8 @@ const getReportTitle = (doc: cheerio.CheerioAPI): string => {
   return doc('h3[class="panel-title"] a').first().text().trim()
 }
 
-const ERROR_KEYS = ['Exception:', 'Traceback', 'Error:']
-
-const findError = (doc: cheerio.CheerioAPI): boolean => {
-  let result = false
-  doc('div[id]').each((_, elm) => {
-    const $ = doc(elm)
-    if ($.attr('id')?.startsWith('collapse_output')) {
-      if (ERROR_KEYS.some((key) => $.text().includes(key))) {
-        result = true
-        return false
-      }
-    }
-    return
-  })
-
-  return result
+const hasError = (doc: cheerio.CheerioAPI): boolean => {
+  return getOutputs(doc('body'))
+    .toArray()
+    .some((elm) => hasErrorOnOutput(doc(elm).text()))
 }

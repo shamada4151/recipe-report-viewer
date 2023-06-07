@@ -6,11 +6,14 @@ import Typography from '@mui/material/Typography'
 import { useTreeItem } from '@renderer/providers/TreeItemProvider'
 import { TreeItem } from 'src/types'
 import Link from '@mui/material/Link'
+import Stack from '@mui/material/Stack'
+import GoToError from './GoToError'
 
 const checkStringPrefix = (str1: string, str2: string): boolean => {
   // split the strings into arrays by '/'
-  const arr1 = str1.split('/').filter((item) => item && item !== 'Report.html')
-  const arr2 = str2.split('/').filter((item) => item && item !== 'Report.html')
+  // prefix だけ調べたいので末尾は無視する
+  const arr1 = str1.split('/').slice(0, -1)
+  const arr2 = str2.split('/').slice(0, -1)
 
   // check if the strings have same prefix
   const minLength = Math.min(arr1.length, arr2.length)
@@ -50,11 +53,10 @@ type Crumb = {
 const Header: FC = () => {
   const [page, setPage] = usePagePath()
   const tree = useTreeItem()
-  console.log({ page, tree })
 
   const crumbs = useMemo<Array<Crumb>>(() => {
     if (tree) {
-      return findParents(tree, page).map((item) => ({
+      return findParents(tree, page.replace(/#.+/, '')).map((item) => ({
         label: item.report.title,
         href: item.href
       }))
@@ -65,40 +67,43 @@ const Header: FC = () => {
 
   return (
     <Box px={1}>
-      <Breadcrumbs
-        sx={{
-          ol: {
-            overflowX: 'auto',
-            flexWrap: 'nowrap'
-          },
-          li: {
-            whiteSpace: 'nowrap'
-          }
-        }}
-      >
-        {crumbs.map((item, i) =>
-          i === crumbs.length - 1 ? (
-            <Typography
-              key={`${item}-${i}`}
-              color="text.primary"
-              sx={{ display: 'flex', alignItems: 'center' }}
-            >
-              {item.label}
-            </Typography>
-          ) : (
-            <Link
-              component="button"
-              underline="hover"
-              color="inherit"
-              key={`${item}-${i}`}
-              onClick={(): void => setPage(item.href)}
-              sx={{ display: 'flex', alignItems: 'center' }}
-            >
-              {item.label}
-            </Link>
-          )
-        )}
-      </Breadcrumbs>
+      <Stack direction="row" justifyContent="space-between">
+        <Breadcrumbs
+          sx={{
+            ol: {
+              overflowX: 'auto',
+              flexWrap: 'nowrap'
+            },
+            li: {
+              whiteSpace: 'nowrap'
+            }
+          }}
+        >
+          {crumbs.map((item, i) =>
+            i === crumbs.length - 1 ? (
+              <Typography
+                key={`${item}-${i}`}
+                color="text.primary"
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                {item.label}
+              </Typography>
+            ) : (
+              <Link
+                component="button"
+                underline="hover"
+                color="inherit"
+                key={`${item}-${i}`}
+                onClick={(): void => setPage(item.href)}
+                sx={{ display: 'flex', alignItems: 'center' }}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
+        </Breadcrumbs>
+        <GoToError />
+      </Stack>
     </Box>
   )
 }
