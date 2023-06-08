@@ -27,6 +27,8 @@ export const ReportParserMiddleware = (root: string): RequestHandler => {
       addActivityId($)
       addErrorClass($)
 
+      addScrollMonitor($)
+
       // 解析結果を反映したいたいめ最後に実行する
       notifyActivitiesId($)
 
@@ -45,9 +47,9 @@ const addLoadedEventHandler = ($: cheerio.CheerioAPI): void => {
   // ページ遷移を通知するためのイベントを追加
   $('body').append(`
     <script>
-      window.onload = function() {
+      window.addEventListener('load', function() {
         window.parent.postMessage(window.location.href, "*");
-      }
+      });
     </script>
   `)
 }
@@ -95,4 +97,28 @@ const notifyActivitiesId = ($: cheerio.CheerioAPI): void => {
       })
       .toArray()
   )
+}
+
+const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
+  function observeScroll(): void {
+    const contents = document.querySelectorAll('.panel')
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        console.log(e.target.id)
+        window.parent.postMessage(e.target.id, '*')
+      })
+    })
+
+    contents.forEach((content) => {
+      observer.observe(content)
+    })
+  }
+
+  // ページ遷移を通知するためのイベントを追加
+  $('body').append(`
+    <script>
+      window.addEventListener('load', ${observeScroll.toString()})
+    </script>
+  `)
 }

@@ -19,9 +19,10 @@ const ReportView: FC<Props> = ({ root }) => {
       }
 
       // react-routerのhistoryを更新
-      if (typeof event.data === 'string') {
-        setPath(event.data.replace(`${root}`, ''))
-      }
+      console.log(event)
+      // if (typeof event.data === 'string') {
+      //   setPath(event.data.replace(`${root}`, ''))
+      // }
     }
     // メッセージ受信イベントをリッスン
     window.addEventListener('message', callback)
