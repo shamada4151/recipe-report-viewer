@@ -110,6 +110,15 @@ const notifyActivitiesId = ($: cheerio.CheerioAPI): void => {
 }
 
 const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
+  const intersection = 'intersection'
+  $('.container-fluid').wrap(
+    $(`<div id="${intersection}"></div>`).css({
+      overflow: 'auto',
+      width: '100%',
+      height: '100vh'
+    })
+  )
+
   function observeScroll(): void {
     function buildMessage(id: string): ScrolledMessage {
       return {
@@ -119,13 +128,22 @@ const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
         }
       }
     }
-    const contents = document.querySelectorAll('.panel')
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        window.parent.postMessage(buildMessage(e.target.id), '*')
-      })
-    })
+    const contents = document.querySelectorAll('.panel')
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          console.log(e)
+          if (e.isIntersecting) {
+            window.parent.postMessage(buildMessage(e.target.id), '*')
+          }
+        })
+      },
+      {
+        root: document.querySelector('#intersection'),
+        rootMargin: '-1% 0px -99% 0px'
+      }
+    )
 
     contents.forEach((content) => {
       observer.observe(content)

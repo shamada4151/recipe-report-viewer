@@ -8,6 +8,7 @@ import { TreeItem } from 'src/types'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import MoveActivity from './MoveActivity'
+import { useCurrentActivity } from './ReportMessageProvider'
 
 const checkStringPrefix = (str1: string, str2: string): boolean => {
   // split the strings into arrays by '/'
@@ -51,6 +52,7 @@ type Crumb = {
 }
 
 const Header: FC = () => {
+  const id = useCurrentActivity()
   const [page, setPage] = usePagePath()
   const tree = useTreeItem()
 
@@ -101,6 +103,7 @@ const Header: FC = () => {
               </Link>
             )
           )}
+          {id && <Typography>{id}</Typography>}
         </Breadcrumbs>
         <MoveActivity />
       </Stack>
