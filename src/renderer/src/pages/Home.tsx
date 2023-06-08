@@ -87,7 +87,7 @@ const Home: FC = () => {
         <Stack direction="row" height="100%">
           <SidePanel />
           <Box height="100%" sx={{ flexGrow: 1 }}>
-            <ReportView root={`http://127.0.0.1:${server.port}`} />
+            <ReportView origin={`http://127.0.0.1:${server.port}`} />
           </Box>
         </Stack>
       </Box>

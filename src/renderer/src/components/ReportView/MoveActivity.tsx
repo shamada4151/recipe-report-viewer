@@ -6,6 +6,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 
 import { trpc } from '@renderer/utils/trpc'
 import { usePagePath } from '@renderer/providers/PagePathProvider'
+import { useCurrentActivity } from './ReportMessageProvider'
 
 function appendOrReplaceWithHash(text: string, originalString: string): string {
   if (!text) {
@@ -27,6 +28,7 @@ const MoveActivity: FC = () => {
   const [index, setIndex] = useState(0)
   const [ids, setIds] = useState<Array<string>>([])
   const [page, setPage] = usePagePath()
+  const currentId = useCurrentActivity()
   trpc.report.activities.useSubscription(undefined, {
     onData(data) {
       setIds(data.activities.map((activity) => activity.id))
@@ -54,6 +56,13 @@ const MoveActivity: FC = () => {
       setIndex(0)
     }
   }, [page])
+
+  useEffect(() => {
+    const index = ids.indexOf(currentId)
+    if (index !== -1) {
+      setIndex(index)
+    }
+  }, [currentId])
 
   return (
     <Stack direction="row">
