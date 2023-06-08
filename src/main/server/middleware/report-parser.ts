@@ -111,6 +111,7 @@ const notifyActivitiesId = ($: cheerio.CheerioAPI): void => {
 
 const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
   const intersection = 'intersection'
+  // Intersection 監視用の Element を最上位に追加する
   $('.container-fluid').wrap(
     $(`<div id="${intersection}"></div>`).css({
       overflow: 'auto',
@@ -133,7 +134,6 @@ const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          console.log(e)
           if (e.isIntersecting) {
             window.parent.postMessage(buildMessage(e.target.id), '*')
           }
@@ -141,6 +141,7 @@ const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
       },
       {
         root: document.querySelector('#intersection'),
+        // Activity が最上部に到達する直前に通知したいので、1% 下に境界を引く
         rootMargin: '-1% 0px -99% 0px'
       }
     )

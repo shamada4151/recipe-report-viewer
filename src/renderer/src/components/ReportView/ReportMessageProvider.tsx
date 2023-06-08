@@ -19,8 +19,6 @@ export const ReportMessageProvider: FC<Props> = ({ children, origin }) => {
         return
       }
 
-      // react-routerのhistoryを更新
-      console.log(event.data.body)
       switch (event.data.type) {
         case MESSAGE_TYPE.PAGE_TRANSITION:
           setPagePath(event.data.body.location.replace(origin, ''))
