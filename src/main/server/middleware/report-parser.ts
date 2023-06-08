@@ -5,6 +5,7 @@ import type { RequestHandler } from 'express'
 import * as cheerio from 'cheerio'
 import { getActivities, getOutputs, hasErrorOnOutput } from '@main/lib/report'
 import { reportEventEmitter } from '@main/api/roots/report'
+import { ScrolledMessage, TransitionMessage } from 'src/types'
 
 export const ReportParserMiddleware = (root: string): RequestHandler => {
   return (req, res, next) => {
@@ -44,11 +45,20 @@ const removeLinkTarget = ($: cheerio.CheerioAPI): void => {
 }
 
 const addLoadedEventHandler = ($: cheerio.CheerioAPI): void => {
+  function buildMessage(href: string): TransitionMessage {
+    return {
+      type: 'PAGE_TRANSITION',
+      body: {
+        location: href
+      }
+    }
+  }
   // ページ遷移を通知するためのイベントを追加
   $('body').append(`
     <script>
       window.addEventListener('load', function() {
-        window.parent.postMessage(window.location.href, "*");
+        ${buildMessage.toString()}
+        window.parent.postMessage(buildMessage(window.location.href), "*");
       });
     </script>
   `)
@@ -101,12 +111,19 @@ const notifyActivitiesId = ($: cheerio.CheerioAPI): void => {
 
 const addScrollMonitor = ($: cheerio.CheerioAPI): void => {
   function observeScroll(): void {
+    function buildMessage(id: string): ScrolledMessage {
+      return {
+        type: 'SCROLLED',
+        body: {
+          id: id
+        }
+      }
+    }
     const contents = document.querySelectorAll('.panel')
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        console.log(e.target.id)
-        window.parent.postMessage(e.target.id, '*')
+        window.parent.postMessage(buildMessage(e.target.id), '*')
       })
     })
 
