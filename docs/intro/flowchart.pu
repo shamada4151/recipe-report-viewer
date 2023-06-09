@@ -1,0 +1,27 @@
+@startuml OpenReportFlowChart
+
+actor User
+boundary UI
+control App_Server
+control OS
+control Web_Server
+entity Report
+
+User -> UI: Open File Selector
+UI -> App_Server: Open File Selector
+App_Server -> OS: Open File Selector
+activate OS
+User -> OS: Select Report
+OS --> App_Server: Return Report
+deactivate OS
+App_Server -> Web_Server**: Launch
+App_Server --> UI: Success open
+UI -> Web_Server: Request Report
+activate Web_Server
+Web_Server -> Report: Get Report
+Web_Server -> Web_Server: Parse and Edit Report
+Web_Server --> UI: Return Report
+deactivate Web_Server
+UI --> User: Show Report
+
+@enduml
