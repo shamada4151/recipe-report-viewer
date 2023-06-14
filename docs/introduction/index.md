@@ -1,76 +1,4 @@
----
-marp: true
----
-
-# Automation Center Report Viewer の紹介
-
-## EMシステム トピック紹介
-
-2023-06-15
-濱田 伸一郎
-
----
-
-## 今回のテーマ
-
-- 業務の改善と実験を兼ねたツール開発事例の紹介
-- 手軽にネイティブアプリが開発できるフレームワーク Electron の紹介
-
----
-
-## Report Viewer
-
-- Automation Center の出力する Report を閲覧しやすくするツール
-
-### Features
-
-- 任意 or 最新レポートの表示
-- ネストされたサブレシピのツリー表示
-- エラーが起きたレシピのハイライト
-- アクティビティ間移動
-- Automation Center でレシピを開く
-
-![bg right:40% fit](images/ReportViewer.png)
-
----
-
-## アーキテクチャ
-
-- 主に3つの要素で成り立っている
-  - UI プロセス: UI の描画
-  - Application Server: Web Server と UI の仲介・OS 由来の API 実行
-  - Web Server: Report の解析
-- Electron のフレームワークに乗っかることですべての構成を TypeScript で実装可能
-
-![bg right:40% fit](./images/architecture.svg)
-
----
-
-## 補足: 採用技術について
-
-### node.js
-
-Server 用の JavaScript ランタイム
-ブラウザ以外でも JavaScript が実行できるようになる
-
-### TypeScript
-
-動的型付け言語の JavaScript を C# のように静的な型付けを行った派生言語
-
-### React
-
-JavaScript で UI を構築するためのライブラリ
-
-### Electron
-
-Node.js でデスクトップアプリケーションを開発できるフレームワーク
-html/css/js で UI が構築できる
-
----
-
-## 機能紹介
-
----
+# 細かい使い方の解説(エンジニア向け)
 
 ## レポートファイルの表示: Web Server
 
@@ -78,9 +6,7 @@ html/css/js で UI が構築できる
   - アプリから Web Server へ http 通信でレポートを取得・表示
 - Web Server 上ではレポートファイルの解析・整形を行う
 
-![bg right fit](./images/OpenReportFlowChart.png)
-
----
+![open report](./images/OpenReportFlowChart.png)
 
 ## レポートファイルの解析: サブレシピの Tree 化
 
@@ -98,8 +24,6 @@ Report.html
     |- Report.html
 ...
 ```
-
----
 
 ## レポートファイルの解析: サブレシピの Tree 化 2
 
@@ -121,8 +45,6 @@ Report.html
 }
 ```
 
----
-
 ## レシピのエラー判定
 
 - レポート内にエラーが起きたかどうかの判定は含まれていないので、自前で解析
@@ -132,14 +54,9 @@ Report.html
 ![Alt text](./images/cpython.png)
 
 - Output の内容はスクレイピングの要領で html を検索
-
----
-
-## レシピエラー画像
+- error が見つかったら以下のように表示
 
 ![error tree image](./images/error-tree.png)
-
----
 
 ## Automation Center でレシピを開く
 
@@ -152,16 +69,6 @@ Report.html
 - Automation Center は設定に従って以下にレポートを保存する
 - `{OutputDir}\Report\Local\{RecipePath}\YYYYMMDDHHmmSSfff_{process_id}\`
 - この設定に従った場所に保存されている場合のみ `{RecipePath}` を抽出してレシピを開く
-
----
-
-## デモンストレーション
-
----
-
-## 補足資料
-
----
 
 ## Issue Report 機能
 
